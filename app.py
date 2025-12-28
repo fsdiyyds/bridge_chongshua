@@ -18,6 +18,8 @@ from bridge_calculations import *
 plt.rcParams["font.family"] = ["SimHei", "WenQuanYi Micro Hei", "Heiti TC", "Arial Unicode MS"]
 plt.rcParams['axes.unicode_minus'] = False
 
+
+
 # 页面配置
 st.set_page_config(
     page_title="桥梁冲刷计算系统",
@@ -25,6 +27,56 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+
+def check_user_auth():
+    """
+    验证用户名和授权码，返回是否通过验证
+    """
+    # 1. 若已登录，直接返回True
+    if "is_authenticated" in st.session_state and st.session_state.is_authenticated:
+        return True
+
+    # 2. 展示登录界面（标题+输入框）
+    st.title("🔐 桥梁计算系统 - 身份验证")
+    st.divider()
+
+    # 用户名输入框
+    username = st.text_input("请输入用户名", placeholder="例如：admin", label_visibility="visible")
+    # 授权码输入框（密码格式，隐藏输入内容）
+    auth_code = st.text_input("请输入授权码", type="password", placeholder="例如：Bridge@2025", label_visibility="visible")
+    # 登录按钮
+    login_btn = st.button("登录验证", type="primary", use_container_width=True)
+
+    # 3. 点击按钮后执行验证逻辑
+    if login_btn:
+        # 非空校验
+        if not username or not auth_code:
+            st.error("错误：用户名和授权码不能为空！")
+            return False
+
+        # 从 Streamlit Secrets 中读取授权用户列表（本地/部署环境通用）
+        authorized_users = st.secrets["AUTHORIZED_USERS"]
+
+        # 校验用户名和授权码是否匹配
+        if username in authorized_users and authorized_users[username] == auth_code:
+            # 验证通过：保存登录状态和用户名
+            st.session_state.is_authenticated = True
+            st.session_state.username = username
+            st.success(f"🎉 验证成功！欢迎 {username}，正在进入系统...")
+            # 刷新页面，自动跳转到核心功能
+            st.rerun()
+        else:
+            # 验证失败：提示错误
+            st.error("错误：用户名不存在或授权码错误！请重新输入")
+            return False
+
+    # 4. 未点击按钮/验证失败时，返回False
+    return False
+
+# -------------------------- 第三步：执行登录验证，未通过则终止程序 --------------------------
+if not check_user_auth():
+    st.stop()
 
 # 初始化session state
 if 'distances' not in st.session_state:
@@ -218,11 +270,13 @@ def format_results(params, obstruction_results, flow_areas, flow_distribution,
     
     return "\n".join(result_text)
 
+
 # 主界面
 st.title("🌉 桥梁冲刷计算系统")
 
 # 侧边栏 - 数据输入
 st.sidebar.header("📊 断面数据输入")
+
 
 # 数据输入方式选择
 input_method = st.sidebar.radio(
