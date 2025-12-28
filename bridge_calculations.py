@@ -65,7 +65,7 @@ def calculate_hydraulic_parameters(distances, elevations, water_level, interval=
 
     max_depth = np.max(water_depths)
     avg_depth = np.mean(water_depths)
-    flow_area = np.trapz(water_depths, sample_points)
+    flow_area = np.core.trapz(water_depths, sample_points)
 
     return avg_depth, max_depth, flow_area, intersections
 
@@ -252,9 +252,9 @@ def calculate_flow_areas(distances, elevations, design_water_level, boundary1, b
     left_floodplain_mask = (distances_slice < boundary1)
     right_floodplain_mask = (distances_slice > boundary2)
 
-    channel_area = np.trapz(water_depths[channel_mask], distances_slice[channel_mask])
-    left_floodplain_area = np.trapz(water_depths[left_floodplain_mask], distances_slice[left_floodplain_mask])
-    right_floodplain_area = np.trapz(water_depths[right_floodplain_mask], distances_slice[right_floodplain_mask])
+    channel_area = np.core.trapz(water_depths[channel_mask], distances_slice[channel_mask])
+    left_floodplain_area = np.core.trapz(water_depths[left_floodplain_mask], distances_slice[left_floodplain_mask])
+    right_floodplain_area = np.core.trapz(water_depths[right_floodplain_mask], distances_slice[right_floodplain_mask])
 
     return left_floodplain_area, channel_area, right_floodplain_area
 
