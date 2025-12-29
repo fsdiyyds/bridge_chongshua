@@ -14,9 +14,11 @@ import re
 # 导入计算模块
 from bridge_calculations import *
 
-# 设置matplotlib中文字体
-plt.rcParams["font.family"] = ["SimHei", "WenQuanYi Micro Hei", "Heiti TC", "Arial Unicode MS"]
-plt.rcParams['axes.unicode_minus'] = False
+plt.rcParams["font.family"] = "DejaVu Sans"
+# 方案2：多内置字体备选（更稳妥，按顺序匹配可用字体）
+# plt.rcParams["font.family"] = ["DejaVu Sans", "Liberation Sans", "Arial"]
+
+plt.rcParams["axes.unicode_minus"] = False  # 必加：解决负号显示方框
 
 
 
