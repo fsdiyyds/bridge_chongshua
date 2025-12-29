@@ -14,12 +14,9 @@ import re
 # 导入计算模块
 from bridge_calculations import *
 
-plt.rcParams["font.family"] = "DejaVu Sans"
-# 方案2：多内置字体备选（更稳妥，按顺序匹配可用字体）
-# plt.rcParams["font.family"] = ["DejaVu Sans", "Liberation Sans", "Arial"]
-
-plt.rcParams["axes.unicode_minus"] = False  # 必加：解决负号显示方框
-
+plt.rcParams["font.family"] = ["WenQuanYi Micro Hei", "SimHei", "Heiti TC"]
+# 解释：按顺序查找字体，找到可用的中文字体即停止，兼容不同系统
+plt.rcParams["axes.unicode_minus"] = False  # 强制解决负号显示异常
 
 
 # 页面配置
