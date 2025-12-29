@@ -5,7 +5,7 @@
 import numpy as np
 import math
 import re
-from scipy.integrate import trapz
+from scipy.integrate import simpson
 
 # 常量定义
 MAX_A_COEFFICIENT = 1.8  # 单宽流量集中系数最大值
@@ -66,7 +66,7 @@ def calculate_hydraulic_parameters(distances, elevations, water_level, interval=
 
     max_depth = np.max(water_depths)
     avg_depth = np.mean(water_depths)
-    flow_area = trapz(water_depths, sample_points)
+    flow_area = simpson(water_depths, sample_points)
 
     return avg_depth, max_depth, flow_area, intersections
 
@@ -253,9 +253,9 @@ def calculate_flow_areas(distances, elevations, design_water_level, boundary1, b
     left_floodplain_mask = (distances_slice < boundary1)
     right_floodplain_mask = (distances_slice > boundary2)
 
-    channel_area = trapz(water_depths[channel_mask], distances_slice[channel_mask])
-    left_floodplain_area = trapz(water_depths[left_floodplain_mask], distances_slice[left_floodplain_mask])
-    right_floodplain_area = trapz(water_depths[right_floodplain_mask], distances_slice[right_floodplain_mask])
+    channel_area = simpson(water_depths[channel_mask], distances_slice[channel_mask])
+    left_floodplain_area = simpson(water_depths[left_floodplain_mask], distances_slice[left_floodplain_mask])
+    right_floodplain_area = simpson(water_depths[right_floodplain_mask], distances_slice[right_floodplain_mask])
 
     return left_floodplain_area, channel_area, right_floodplain_area
 
